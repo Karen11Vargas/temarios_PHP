@@ -34,9 +34,19 @@ class temarioModel extends Model {
 
   static function by_id($id)
   {
-    // Un registro con $id
     $sql = 'SELECT * FROM temarios WHERE id = :id LIMIT 1';
-    return ($rows = parent::query($sql, ['id' => $id])) ? $rows[0] : [];
+    $rows = parent::query($sql, ['id' => $id]);
+
+    if (!$rows) return [];
+
+    //Si si existe el registro cargar
+    $rows = $rows[0];
+
+    $sql ='SELECT * FROM lecciones WHERE id_temario = :id_temario ORDER BY orden ASC';
+    $rows['lecciones']= ($lecciones = parent::query($sql, ['id_temario'=>$rows['id']])) ? $lecciones: [];
+
+
+    return $rows;
   }
 }
 

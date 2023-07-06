@@ -68,3 +68,44 @@ function formatTemarioEstado($estado){
  return $output;
 
 }
+
+function get_tipo_lecciones(){
+  return[
+    ['texto', 'Texto'],
+    ['video', 'Video'],
+    ['descarga', 'Descarga'],
+    ['recurso_externo', 'Recurso Externo']
+  ];
+}
+
+function format_tipo_leccion($tipo_leccion){
+
+  $icon='';
+  $placeholder='<i class="%s"></i>';
+
+  switch ($tipo_leccion) {
+    case 'texto':
+      $icon = 'fas fa-file-alt';
+      break;
+
+    case 'video':
+      $icon = 'fas fa-video';
+      break;
+
+    case 'descarga':
+      $icon = 'fas fa-download';
+      break;
+
+    case 'recurso_externo':
+      $icon = 'fas fa-external-link-alt';
+      break;
+
+    default:
+      $icon = 'fas fa-question-circle';
+      
+      break;
+   }
+
+   return sprintf($placeholder, $icon);
+
+}

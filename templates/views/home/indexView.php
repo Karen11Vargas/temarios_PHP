@@ -29,7 +29,7 @@
                         <?php foreach($d->temarios->rows as $t){ ?>
                             <tr>
                                 <td><?php echo sprintf('<a href="temarios/ver/%s">%s</a>',$t->id, $t->numero);?></td>
-                                <td><?php echo add_ellipsis($t->titulo, 50); ?></td>
+                                <td><?php echo empty($t->titulo) ? '<span class="text-muted">Sin titulo</span>': add_ellipsis($t->titulo, 50); ?></td>
                                 <td><?php echo formatTemarioEstado($t->estado); ?></td>
                                 <td><?php echo add_ellipsis($t->creado); ?></td>
                                 <td>
