@@ -11,24 +11,16 @@ class homeController extends Controller {
 
   function index()
   {
+   
+    
     $data =
     [
       'title' => 'Temarios',
-      'temarios'=>[]
+      'temarios'=>temarioModel::all_paginated()
     ];
 
     View::render('index', $data);
   }
 
-
-  function flash()
-  {
-    if (!Auth::validate()) {
-      Flasher::new('Debes iniciar sesión primero.', 'danger');
-      Redirect::to('login');
-    }
-
-    View::render('flash', ['title' => 'Flash', 'user' => User::profile()]);
-  }
 
 }

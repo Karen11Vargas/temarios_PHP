@@ -25,6 +25,13 @@ class temarioModel extends Model {
     return ($rows = parent::query($sql)) ? $rows : [];
   }
 
+  static function all_paginated()
+  {
+    // Todos los registros
+    $sql = 'SELECT * FROM temarios ORDER BY id DESC';
+    return PaginationHandler::paginate($sql);
+  }
+
   static function by_id($id)
   {
     // Un registro con $id

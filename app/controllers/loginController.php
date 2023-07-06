@@ -53,6 +53,6 @@ class loginController extends Controller {
 
     // Loggear al usuario
     Auth::login($user['id'], $user);
-    Redirect::to('home/flash');
+    Redirect::to('home');
   }
 }

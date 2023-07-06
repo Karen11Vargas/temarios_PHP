@@ -10,7 +10,7 @@
             <li class="nav-item"><a href="login" class="nav-link active" aria-current="page">Ingresar</a></li>
 
         <?php }else{ ?>
-            <li class="nav-item"><a href="logout" class="nav-link active" aria-current="page">Salir</a></li>
+            <li class="nav-item"><a href="logout" class="nav-link " aria-current="page">Salir</a></li>
 
         <?php } ?>
 
