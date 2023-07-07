@@ -313,9 +313,9 @@ $(document).ready(function() {
 
   /////////////////////////
 
-   // Agregar un movimiento
-   $('#temario_form').on('submit', temario_form);
-   function temario_form(e) {
+   // Editar Temario
+  $('#temario_form').on('submit', temario_form);
+  function temario_form(e) {
      e.preventDefault();
  
      var form    = $(this),
@@ -350,6 +350,108 @@ $(document).ready(function() {
      }).always(function() {
        form.waitMe('hide');
      })
-   }
+  }
+
+  // Agregar leccion
+  $('#add_leccion_form').on('submit', add_leccion_form);
+  function add_leccion_form(e) {
+    e.preventDefault();
+  
+    var form    = $(this),
+    hook        = 'bee_hook',
+    action      = 'post',
+    data        = new FormData(form.get(0));
+ 
+    data.append('hook', hook);
+    data.append('action', action);
+  
+  
+    // AJAX
+    $.ajax({
+      url: 'ajax/add_leccion_form',
+      type: 'post',
+      dataType: 'json',
+      contentType: false,
+      processData: false,
+      cache: false,
+      data : data,
+      beforeSend: function() {
+        form.waitMe();
+      }
+    }).done(function(res) {
+      if(res.status === 201) {
+        toastr.success(res.msg, '¡Bien!');
+        form.trigger('reset');
+        get_lecciones();
+      } else {
+        toastr.error(res.msg, '¡Upss!');
+      }
+    }).fail(function(err) {
+      toastr.error('Hubo un error en la petición', '¡Upss!');
+    }).always(function() {
+      form.waitMe('hide');
+    })
+  }
+
+  // Cargar lista lecciones
+  get_lecciones();
+  function get_lecciones() {
+    var wrapper = $('.wrapper_lecciones'),
+    id          = wrapper.data('id'),
+    hook        = 'bee_hook',
+    action      = 'get';
+  
+    if (wrapper.length === 0) {
+      return;
+    }
+  
+    $.ajax({
+      url: 'ajax/get_lecciones',
+      type: 'POST',
+      dataType: 'json',
+      cache: false,
+      data: {
+        hook, action, id
+      },
+      beforeSend: function() {
+        wrapper.waitMe();
+      }
+    }).done(function(res) {
+      if(res.status === 200) {
+        wrapper.html(res.data);
+        init_lecciones_acordion();
+      } else {
+        toastr.error(res.msg, '¡Upss!');
+        wrapper.html(res.msg);
+      }
+    }).fail(function(err) {
+      toastr.error('Hubo un error en la petición', '¡Upss!');
+      wrapper.html('Hubo un error intenta mas tarde');
+      wrapper.html('');
+    }).always(function() {
+      wrapper.waitMe('hide');
+    })
+  }
+
+  //Acordion
+  function init_lecciones_acordion(){
+    $( "#accordion" )
+    .accordion({
+      header: "> div > h3",
+      collapsible: true
+    })
+    .sortable({
+      axis: "y",
+      handle: "h3",
+      stop: function( event, ui ) {
+        // IE doesn't register the blur when sorting
+        // so trigger focusout handlers to remove .ui-state-focus
+        ui.item.children( "h3" ).triggerHandler( "focusout" );
+ 
+        // Refresh accordion to handle new order
+        $( this ).accordion( "refresh" );
+      }
+    });
+  }
  
 });

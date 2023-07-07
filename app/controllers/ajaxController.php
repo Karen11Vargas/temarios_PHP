@@ -66,31 +66,66 @@ class ajaxController extends Controller {
       json_output(json_build(400, null, $e->getMessage()));
     }catch (PDOException $e) {
       json_output(json_build(400, null, $e->getMessage()));
+    }
   }
-}
 
-  function bee_get_movements()
+  function add_leccion_form()
   {
     try {
-      $movements          = new movementModel;
-      $movs               = $movements->all_by_date();
+      $id_temario = (int) $_POST['id_temario'];
+      $titulo = clean($_POST['titulo']);
+      $contenido = clean($_POST['contenido']);
+      $tipo = clean($_POST['tipo']);
+      $orden = 0;
 
-      $taxes              = (float) get_option('taxes') < 0 ? 16 : get_option('taxes');
-      $use_taxes          = get_option('use_taxes') === 'Si' ? true : false;
-      
-      $total_movements    = $movs[0]['total'];
-      $total              = $movs[0]['total_incomes'] - $movs[0]['total_expenses'];
-      $subtotal           = $use_taxes ? $total / (1.0 + ($taxes / 100)) : $total;
-      $taxes              = $subtotal * ($taxes / 100);
-      
-      $calculations       = [
-        'total_movements' => $total_movements,
-        'subtotal'        => $subtotal,
-        'taxes'           => $taxes,
-        'total'           => $total
+
+      if(strlen($titulo) < 5){
+        json_output(json_build(400, null, 'El titulo es demasiado corto'));
+      }
+
+      if(!$temario = temarioModel::by_id($id_temario)){
+        json_output(json_build(400, null, 'El temario no existe'));
+      }
+
+      //Validar lecciones
+      if(!empty($temario['lecciones'])){
+        $ultima_leccion= end($temario['lecciones']);
+        $ultimo_orden= $ultima_leccion['orden'];
+        $orden= $ultimo_orden + 1;
+      }
+
+      $data =
+      [
+        'id_temario'=>$id_temario, 
+        'titulo'=>$titulo, 
+        'contenido'=>$contenido,
+        'tipo'=>$tipo,
+        'estado'=>'pendiente',
+        'orden'=>$orden,
+        'creado'=>now(),
+        'actualizado'=>now() 
       ];
 
-      $data = get_module('movements', ['movements' => $movs, 'cal' => $calculations]);
+      if(!$id_leccion = leccionModel::add(leccionModel::$t1, $data)) {
+        json_output(json_build(400, null, 'Hubo error al agregar la lección'));
+      } 
+  
+      // se guardó con éxito
+      $temario = temarioModel::by_id($id_temario);
+      json_output(json_build(201, $temario, 'Leccion agregada con éxito'));
+      
+    } catch (Exception $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }catch (PDOException $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }
+  }
+
+  function get_lecciones()
+  {
+    try {
+      $id = clean($_POST['id']);
+      $data = get_module('listaLecciones', temarioModel::by_id($id));
       json_output(json_build(200, $data));
     } catch(Exception $e) {
       json_output(json_build(400, $e->getMessage()));

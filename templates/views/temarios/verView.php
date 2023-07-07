@@ -39,6 +39,9 @@
                 <div class="card-header">Agregar Leccion</div>
                 <div class="card-body">
                     <form id="add_leccion_form">
+                        <input type="hidden" name="id_temario" value="<?php echo $d->t->id; ?>" required>
+                        <?php echo insert_inputs();?>
+
                         <div class="mb-3">
                             <label for="l_titulo">Titulo</label>
                             <input type="text" class="form-control" name="titulo" id="l_titulo" required>
@@ -95,32 +98,8 @@
         </div>
 
         <div class="col-lg-8">
-            <div class="wrapper_lecciones">
-                <?php if(!empty($d->t->lecciones)){?>
-                    <div id="accordion">
-                        <?php foreach($d->t->lecciones as $l){ ?>
-                            <div class="group">
-                                <h3><?php echo sprintf('%s %s', format_tipo_leccion($l->tipo), $l->titulo);  ?></h3>
-                                <div>
-                                    <?php echo empty($l->contenido) ? '<span class="text-muted">Sin Contenido</span>': $l->contenido; ?>
-                                    <div class="mt-3">
-                                        <div class="btn-group">
-                                            <button class="btn btn-success btn-sm open_update_leccion_form" data-id="<?php echo $l->id; ?>"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-danger btn-sm delete_leccion" data-id="<?php echo $l->id; ?>"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                        <button class="btn btn-sm update_leccion_status <?php echo $l->estado==='pendiente' ? 'btn-warning text-dark': 'btn-success';?>" data-id="<?php echo $l->id; ?>><i class="fas fa-check"></i> Lista</button>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php }?>
-                    </div>
-                <?php }else{?>
-                    <div class="text-center py-5">
-                        <img src="<?php echo IMAGES.'yumi_empty.png'; ?>" alt="No hay lecciones" style="width: 120px;" class="img-fluis">
-                        <p class="text-muted">No hay lecciones disponibles</p>
-                    </div>
-                <?php }?>
-               
+            <div class="wrapper_lecciones" data-id="<?php echo $d->t->id; ?>">
+              <!-- Se carga con AJAX -->
             </div>
         </div>
     </div>
