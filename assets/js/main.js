@@ -310,4 +310,46 @@ $(document).ready(function() {
       form.waitMe('hide');
     })
   }
+
+  /////////////////////////
+
+   // Agregar un movimiento
+   $('#temario_form').on('submit', temario_form);
+   function temario_form(e) {
+     e.preventDefault();
+ 
+     var form    = $(this),
+     hook        = 'bee_hook',
+     action      = 'post',
+     data        = new FormData(form.get(0));
+
+     data.append('hook', hook);
+     data.append('action', action);
+ 
+ 
+     // AJAX
+     $.ajax({
+       url: 'ajax/temario_form',
+       type: 'post',
+       dataType: 'json',
+       contentType: false,
+       processData: false,
+       cache: false,
+       data : data,
+       beforeSend: function() {
+         form.waitMe();
+       }
+     }).done(function(res) {
+       if(res.status === 200) {
+         toastr.success(res.msg, '¡Bien!');
+       } else {
+         toastr.error(res.msg, '¡Upss!');
+       }
+     }).fail(function(err) {
+       toastr.error('Hubo un error en la petición', '¡Upss!');
+     }).always(function() {
+       form.waitMe('hide');
+     })
+   }
+ 
 });

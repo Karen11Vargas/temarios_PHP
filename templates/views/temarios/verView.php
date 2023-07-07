@@ -17,6 +17,9 @@
                 <div class="card-header">Detalles del Temario</div>
                 <div class="card-body">
                     <form id="temario_form">
+                        <input type="hidden" name="id" value="<?php echo $d->t->id; ?>" required>
+                        <?php echo insert_inputs();?>
+
                         <div class="mb-3">
                             <label for="titulo">Titulo</label>
                             <input type="text" class="form-control" name="titulo" id="titulo" value="<?php echo $d->t->titulo; ?>">

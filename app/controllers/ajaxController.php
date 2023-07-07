@@ -41,25 +41,33 @@ class ajaxController extends Controller {
     json_output(json_build(403));
   }
 
-  function bee_add_movement()
+  function temario_form()
   {
     try {
-      $mov              = new movementModel();
-      $mov->type        = $_POST['type'];
-      $mov->description = $_POST['description'];
-      $mov->amount      = (float) $_POST['amount'];
-      if(!$id = $mov->add()) {
-        json_output(json_build(400, null, 'Hubo error al guardar el registro'));
+      $id = (int) $_POST['id'];
+      $titulo = clean($_POST['titulo']);
+      $descripcion = clean($_POST['descripcion']);
+
+      $data =
+      [
+        'titulo'=>$titulo, 
+        'descripcion'=>$descripcion
+      ];
+
+      if(!temarioModel::update(temarioModel::$t1, ['id'=>$id], $data)) {
+        json_output(json_build(400, null, 'Hubo error al actualizar el temario'));
       }
   
       // se guardó con éxito
-      $mov->id = $id;
-      json_output(json_build(201, $mov->one(), 'Movimiento agregado con éxito'));
+      $temario = temarioModel::by_id($id);
+      json_output(json_build(200, $temario, 'Temario actualizado con éxito'));
       
     } catch (Exception $e) {
       json_output(json_build(400, null, $e->getMessage()));
-    }
+    }catch (PDOException $e) {
+      json_output(json_build(400, null, $e->getMessage()));
   }
+}
 
   function bee_get_movements()
   {
