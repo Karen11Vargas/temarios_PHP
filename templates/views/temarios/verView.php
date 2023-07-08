@@ -66,10 +66,10 @@
                 </div>
             </div>
 
-            <div class="card mb-3 d-none">
+            <div class="card mb-3" style="display : none;">
                 <div class="card-header">Actualizar Leccion</div>
                 <div class="card-body">
-                    <form id="add_leccion_form">
+                    <form id="update_leccion_form">
                         <input type="hidden" name="id" value="" required>
 
                         <div class="mb-3">

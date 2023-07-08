@@ -488,5 +488,50 @@ $(document).ready(function() {
         $('body').waitMe('hide');
       })
     }
+
+    //Cargar Informacion de leccion
+    $('body').on('click', '.open_update_leccion_form', open_update_leccion_form);
+    function open_update_leccion_form(e){
+      e.preventDefault();
+
+      var button = $(this), 
+      id= button.data('id'),
+      action = 'get',
+      hook = 'bee_hook',
+      form_a = $('#add_leccion_form'),
+      form_e = $('#update_leccion_form');
+
+      
+      $.ajax({
+        url: 'ajax/open_update_leccion_form',
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        data: {
+          hook, action, id
+        },
+        beforeSend: function() {
+          $('body').waitMe();
+        }
+      }).done(function(res) {
+        if(res.status === 200) {
+          $('[name="id"]', form_e).val(res.data.id);
+          $('[name="titulo"]', form_e).val(res.data.titulo);
+          $('[name="contenido"]', form_e).val(res.data.contenido);
+          $('[name="tipo"]', form_e).val(res.data.tipo);
+
+          form_a.closest('.card').fadeOut();
+          form_e.closest('.card').fadeIn();
+
+        } else {
+          toastr.error(res.msg, '¡Upss!');
+        }
+      }).fail(function(err) {
+        toastr.error('Hubo un error en la petición', '¡Upss!');
+      }).always(function() {
+        $('body').waitMe('hide');
+      })
+    }
+
  
 });
