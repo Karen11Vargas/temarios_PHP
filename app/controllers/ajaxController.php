@@ -133,19 +133,25 @@ class ajaxController extends Controller {
 
   }
 
-  function bee_delete_movement()
+  function delete_leccion()
   {
     try {
-      $mov     = new movementModel();
-      $mov->id = $_POST['id'];
+      $id_leccion = clean($_POST['id']);
 
-      if(!$mov->delete()) {
-        json_output(json_build(400, null, 'Hubo error al borrar el registro'));
+      //Validar
+      if(!leccionModel::list(leccionModel::$t1, ['id'=>$id_leccion], 1)){
+        throw new Exception('No existe la leccion en la base de datos.');
       }
 
-      json_output(json_build(200, null, 'Movimiento borrado con éxito'));
+      if(!leccionModel::remove(leccionModel::$t1, ['id'=>$id_leccion], 1)) {
+        json_output(json_build(400, null, 'Hubo error al borrar la leccion'));
+      }
+
+      json_output(json_build(200, null, 'Leccion borrada con éxito'));
       
     } catch (Exception $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }catch (PDOException $e) {
       json_output(json_build(400, null, $e->getMessage()));
     }
   }

@@ -453,5 +453,40 @@ $(document).ready(function() {
       }
     });
   }
+
+    // Borrar leccion
+    $('body').on('click', '.delete_leccion', delete_leccion);
+    function delete_leccion(e) {
+      var boton   = $(this),
+      id          = boton.data('id'),
+      hook        = 'bee_hook',
+      action      = 'delete';
+        
+      if(!confirm('¿Estás seguro?')) return false;
+  
+      $.ajax({
+        url: 'ajax/delete_leccion',
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        data: {
+          hook, action, id
+        },
+        beforeSend: function() {
+          $('body').waitMe();
+        }
+      }).done(function(res) {
+        if(res.status === 200) {
+          toastr.success(res.msg, 'Bien!');
+          get_lecciones();
+        } else {
+          toastr.error(res.msg, '¡Upss!');
+        }
+      }).fail(function(err) {
+        toastr.error('Hubo un error en la petición', '¡Upss!');
+      }).always(function() {
+        $('body').waitMe('hide');
+      })
+    }
  
 });
