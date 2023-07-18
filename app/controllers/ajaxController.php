@@ -156,6 +156,8 @@ class ajaxController extends Controller {
     }
   }
 
+
+
   function bee_update_movement()
   {
     try {
@@ -219,16 +221,6 @@ class ajaxController extends Controller {
     json_output(json_build(200, null, 'Opciones actualizadas con éxito'));
   }
 
-  function open_update_leccion_form(){
-    try {
-      $id = clean($_POST['id']);
-      if ($leccion = leccionModel::by_id($id)) {
-        throw new PDOException('La leccion no existe en la base de datos');
-      }
-      json_output(json_build(200, $leccion));
 
-    } catch (Exception $e) {
-      json_output(json_build(400, null, $e->getMessage()));
-    }
-  }
+
 }

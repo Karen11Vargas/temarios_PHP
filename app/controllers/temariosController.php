@@ -77,6 +77,20 @@ class temariosController extends Controller {
 
   function borrar($id)
   {
-    // Proceso de borrado
+    try{
+      if(!$temario = temarioModel::by_id($id)){
+        throw new Exception('No existe');
+      }
+
+      if(!temarioModel::remove(temarioModel::$t1, ['id' =>$id], 1)){
+        throw new Exception('No se borro');
+      }
+      Flasher::new(sprintf('Temario <b>#%s</b> borrado con exito', $temario['numero']), 'success');
+      Redirect::back();
+    
+    }catch(Exception $e){
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    }
   }
 }

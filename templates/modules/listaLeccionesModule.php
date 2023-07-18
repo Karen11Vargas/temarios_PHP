@@ -7,10 +7,8 @@
                     <?php echo empty($l->contenido) ? '<span class="text-muted">Sin Contenido</span>': $l->contenido; ?>
                     <div class="mt-3">
                         <div class="btn-group">
-                            <button class="btn btn-success btn-sm open_update_leccion_form" data-id="<?php echo $l->id; ?>"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-danger btn-sm delete_leccion" data-id="<?php echo $l->id; ?>"><i class="fas fa-trash"></i></button>
                         </div>
-                        <button class="btn btn-sm update_leccion_status <?php echo $l->estado==='pendiente' ? 'btn-warning text-dark': 'btn-success';?>" data-id="<?php echo $l->id; ?>"><i class="fas fa-check-square"></i> Lista</button>
                     </div>
                 </div>
             </div>
