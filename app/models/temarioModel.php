@@ -18,33 +18,32 @@ class temarioModel extends Model {
     // Constructor general
   }
   
-  static function all()
-  {
+  static function all() {
     // Todos los registros
     $sql = 'SELECT * FROM temarios ORDER BY id DESC';
     return ($rows = parent::query($sql)) ? $rows : [];
   }
 
-  static function all_paginated()
-  {
+  static function all_paginated() {
     // Todos los registros
-    $sql = 'SELECT * FROM temarios ORDER BY id DESC';
+    $sql = 'SELECT t.*,
+    (SELECT COUNT(l.id) FROM lecciones l WHERE l.id_temario = t.id) AS total_lecciones
+    FROM temarios t
+    ORDER BY t.id DESC';
     return PaginationHandler::paginate($sql);
   }
 
   static function by_id($id)
   {
-    $sql = 'SELECT * FROM temarios WHERE id = :id LIMIT 1';
+    // Un registro con $id
+    $sql  = 'SELECT * FROM temarios WHERE id = :id LIMIT 1';
     $rows = parent::query($sql, ['id' => $id]);
 
     if (!$rows) return [];
 
-    //Si si existe el registro cargar
+    // Si si existe el registro cargar las lecciones disponibles
     $rows = $rows[0];
-
-    $sql ='SELECT * FROM lecciones WHERE id_temario = :id_temario ORDER BY orden ASC';
-    $rows['lecciones']= ($lecciones = parent::query($sql, ['id_temario'=>$rows['id']])) ? $lecciones: [];
-
+    $rows['lecciones'] = leccionModel::by_temario($id);
 
     return $rows;
   }

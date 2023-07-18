@@ -18,7 +18,7 @@ class leccionModel extends Model {
     // Constructor general
   }
   
-  static function all()
+  static function all() 
   {
     // Todos los registros
     $sql = 'SELECT * FROM lecciones ORDER BY id DESC';
@@ -30,6 +30,12 @@ class leccionModel extends Model {
     // Un registro con $id
     $sql = 'SELECT * FROM lecciones WHERE id = :id LIMIT 1';
     return ($rows = parent::query($sql, ['id' => $id])) ? $rows[0] : [];
+  }
+
+  static function by_temario($id_temario)
+  {
+    $sql = 'SELECT * FROM lecciones WHERE id_temario = :id_temario ORDER BY orden ASC';
+    return ($rows = parent::query($sql, ['id_temario' => $id_temario])) ? $rows : [];
   }
 }
 
